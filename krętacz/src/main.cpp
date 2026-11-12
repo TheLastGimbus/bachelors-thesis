@@ -1,16 +1,18 @@
-// Valve driver: stepper (TMC2208) turns the valve, pressure gauge read on A0.
+// Valve driver: stepper driver turns the valve, pressure gauge read on A0.
 //
 // Serial commands (115200, newline terminated):
 //   F <mg/s>   hold inflow at target (PID)
 //   P <Pa>     hold pressure at target (PID)
 //   M <deg>    rotate by angle (negative = other way) and stay; 0 = stop everything
+//   Z          declare current position as 0 (= valve fully closed)
 //   RF / RP / RV   read inflow [mg/s] / pressure [Pa] / raw voltage [V]
+//   RA         read position [deg] from 0
 #include <Arduino.h>
 
 // ---- hardware ----
 const uint8_t PIN_STEP = 2;
 const uint8_t PIN_DIR = 3;
-const uint8_t PIN_EN = 4;  // TMC2208 EN, aztive LOW
+const uint8_t PIN_EN = 4;  // driver ENABLE, active LOW
 const uint8_t PIN_ADC = A0;
 
 // Flip to -1 if "positive" turns the valve the wrong way.
@@ -18,22 +20,27 @@ const uint8_t PIN_ADC = A0;
 const int MOTOR_DIRECTION = 1;
 
 //const float STEPS_PER_REV = 200.0f * 8;  // 1.8deg motor, TMC2208 default 1/8 microstep (MS1=MS2=GND)
-const float STEPS_PER_REV = 200.0f;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
+const float STEPS_PER_REV = 200.0f * 16;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
+//const float STEPS_PER_REV = 200.0f;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
 const float DIVIDER = 2.0f;              // 1:2 divider before ADC
 const float ADC_VREF = 5.0f;
 
 // ---- motion ----
-const float MANUAL_SPEED = 200;    // steps/s
-const float PID_MAX_SPEED = 100;   // steps/s, keeps PID adjustments slow
+const float MANUAL_SPEED = 0.5f * STEPS_PER_REV;     // steps/s (0.5 rev/s)
+const float PID_MAX_SPEED = 0.125f * STEPS_PER_REV;  // steps/s (0.125 rev/s), keeps PID adjustments slow
 
-// ---- PID (error is relative: (target - measured) / target; output in steps/s) ----
-const float KP = 300, KI = 50, KD = 0;
+// ---- software limits: position 0 (boot / Z command) = fully closed ----
+const float MAX_OPEN_DEG = 0;  // 0 = no limit on the opening side
+
+// ---- PID (error is relative: (target - measured) / target; output scaled to steps/s) ----
+const float KP = 1.5f, KI = 0.25f, KD = 0;  // output = fraction of PID_MAX_SPEED
 const unsigned long PID_PERIOD_MS = 200;
 
 enum Mode { IDLE, MANUAL, TARGET_FLOW, TARGET_PRESSURE };
 Mode mode = IDLE;
 float target = 0;
 
+long position = 0;  // steps from closed (0)
 long pending = 0;  // steps left to do (signed, in "valve opening" direction)
 unsigned long stepIntervalUs = 1000000UL / MANUAL_SPEED;
 
@@ -88,8 +95,8 @@ void updatePid() {
 
   float measured = (mode == TARGET_FLOW) ? readFlow() : readPressure();
   float error = (target - measured) / target;
-  integral = constrain(integral + error * dt, -PID_MAX_SPEED / max(KI, 1e-6f), PID_MAX_SPEED / max(KI, 1e-6f));
-  float out = KP * error + KI * integral + KD * (error - lastError) / dt;
+  integral = constrain(integral + error * dt, -1 / max(KI, 1e-6f), 1 / max(KI, 1e-6f));
+  float out = (KP * error + KI * integral + KD * (error - lastError) / dt) * PID_MAX_SPEED;
   lastError = error;
 
   out = constrain(out, -PID_MAX_SPEED, PID_MAX_SPEED);
@@ -111,6 +118,15 @@ void updateStepper() {
   lastStep = micros();
 
   bool forward = pending > 0;
+  bool atClosed = !forward && position <= 0;
+  bool atOpen = forward && MAX_OPEN_DEG > 0 && position >= MAX_OPEN_DEG / 360.0f * STEPS_PER_REV;
+  if (atClosed || atOpen) {
+    pending = 0;
+    integral = 0;
+    Serial.println(atClosed ? "LIMIT closed" : "LIMIT open");
+    return;
+  }
+  position += forward ? 1 : -1;
   digitalWrite(PIN_DIR, (forward == (MOTOR_DIRECTION > 0)) ? HIGH : LOW);
   digitalWrite(PIN_STEP, HIGH);
   delayMicroseconds(2);
@@ -127,12 +143,14 @@ void handleCommand(String line) {
   if (line == "RF") Serial.println(readFlow(), 5);
   else if (line == "RP") Serial.println(readPressure(), 5);
   else if (line == "RV") Serial.println(readVoltage(), 4);
+  else if (line == "RA") Serial.println(position / STEPS_PER_REV * 360.0f, 1);
+  else if (line == "Z") { stop(); position = 0; }
   else if (line[0] == 'F') startMode(TARGET_FLOW, value);
   else if (line[0] == 'P') startMode(TARGET_PRESSURE, value);
   else if (line[0] == 'M') startManual(value);
   else { Serial.println("?"); return; }
 
-  if (line[0] == 'F' || line[0] == 'P' || line[0] == 'M') Serial.println("OK");
+  if (line == "Z" || line[0] == 'F' || line[0] == 'P' || line[0] == 'M') Serial.println("OK");
 }
 
 void setup() {
