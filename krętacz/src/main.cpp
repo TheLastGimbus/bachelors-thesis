@@ -48,11 +48,11 @@ Mode mode = IDLE;
 float target = 0;
 
 long position = 0;  // steps from closed (0)
-long pending = 0;  // steps left to do (signed, in "valve opening" direction)
+long pending = 0;      // MANUAL: steps left to do (signed, in "valve opening" direction)
+float pidSpeed = 0;    // PID: commanded speed in steps/s (signed), stepped continuously
 unsigned long stepIntervalUs = 1000000UL / MANUAL_SPEED;
 
 float integral = 0, lastMeasured = NAN;
-float stepRemainder = 0;
 unsigned long lastPid = 0;
 
 // The ADC reference is Vcc (USB 5 V is only roughly 5), so measure the real Vcc
@@ -88,7 +88,7 @@ float readFlow() { return pressureToFlow(readPressure()); }
 void stop() {
   mode = IDLE;
   pending = 0;
-  stepRemainder = 0;
+  pidSpeed = 0;
 }
 
 void startMode(Mode m, float value) {
@@ -99,7 +99,6 @@ void startMode(Mode m, float value) {
   integral = 0;
   lastMeasured = NAN;
   lastPid = millis();
-  stepIntervalUs = 1000000UL / PID_MAX_SPEED;
 }
 
 void startManual(float degrees) {
@@ -126,29 +125,30 @@ void updatePid() {
   float out = KP * error + KI * integral - KD * rate;
   if (fabs(out) < 1) integral = constrain(integral + error * dt, -1 / max(KI, 1e-6f), 1 / max(KI, 1e-6f));
   if (fabs(error) < DEADBAND && fabs(rate) < DEADBAND) out = 0;
-  out = constrain(out, -1.0f, 1.0f) * PID_MAX_SPEED;
-  stepRemainder += out * dt;
-  long whole = (long)stepRemainder;
-  stepRemainder -= whole;
-  pending = whole;
+  pidSpeed = constrain(out, -1.0f, 1.0f) * PID_MAX_SPEED;
 }
 
 void updateStepper() {
   static unsigned long lastStep = 0;
-  if (pending == 0) {
+  bool pid = (mode == TARGET_FLOW || mode == TARGET_PRESSURE);
+  if (pid && fabs(pidSpeed) >= 1) stepIntervalUs = 1000000UL / fabs(pidSpeed);
+  bool moving = pid ? fabs(pidSpeed) >= 1 : pending != 0;
+
+  if (!moving) {
     if (mode == MANUAL) mode = IDLE;
-    digitalWrite(PIN_EN, HIGH);  // release the coil when nothing to do
+    digitalWrite(PIN_EN, pid ? LOW : HIGH);  // PID keeps holding; otherwise release the coil
     return;
   }
   digitalWrite(PIN_EN, LOW);
   if (micros() - lastStep < stepIntervalUs) return;
   lastStep = micros();
 
-  bool forward = pending > 0;
+  bool forward = pid ? pidSpeed > 0 : pending > 0;
   bool atClosed = !forward && position <= 0;
   bool atOpen = forward && MAX_OPEN_DEG > 0 && position >= MAX_OPEN_DEG / 360.0f * STEPS_PER_REV;
   if (atClosed || atOpen) {
     pending = 0;
+    pidSpeed = 0;
     integral = 0;
     Serial.println(atClosed ? "LIMIT closed" : "LIMIT open");
     return;
@@ -158,7 +158,7 @@ void updateStepper() {
   digitalWrite(PIN_STEP, HIGH);
   delayMicroseconds(2);
   digitalWrite(PIN_STEP, LOW);
-  pending += forward ? -1 : 1;
+  if (!pid) pending += forward ? -1 : 1;
 }
 
 void handleCommand(String line) {
