@@ -23,7 +23,11 @@ const int MOTOR_DIRECTION = 1;
 const float STEPS_PER_REV = 200.0f * 16;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
 //const float STEPS_PER_REV = 200.0f;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
 const float DIVIDER = 2.0f;              // 1:2 divider before ADC
-const float ADC_VREF = 5.0f;
+const float ADC_VREF = 5.0f;    // fallback if the Vcc measurement fails
+const float BANDGAP_V = 1.1f;   // internal reference, varies per chip; calibrate against a known voltage
+// Linear correction fitted against a reference multimeter, applied after the divider factor.
+const float CAL_GAIN = 1.02f;
+const float CAL_OFFSET = 0.0236f;  // volts
 
 // ---- motion ----
 const float MANUAL_SPEED = 0.5f * STEPS_PER_REV;     // steps/s (0.5 rev/s)
@@ -51,10 +55,25 @@ float integral = 0, lastMeasured = NAN;
 float stepRemainder = 0;
 unsigned long lastPid = 0;
 
+// The ADC reference is Vcc (USB 5 V is only roughly 5), so measure the real Vcc
+// against the internal 1.1 V bandgap and use that to scale readings.
+float readVcc() {
+  ADMUX = _BV(REFS0) | _BV(MUX3) | _BV(MUX2) | _BV(MUX1);  // AVcc ref, input = bandgap
+  delay(2);  // let the reference settle
+  ADCSRA |= _BV(ADSC);
+  while (bit_is_set(ADCSRA, ADSC)) {}
+  uint16_t adc = ADC;
+  if (adc == 0) return ADC_VREF;
+  return BANDGAP_V * 1023.0f / adc;
+}
+
 float readVoltage() {
+  float vcc = readVcc();
+  analogRead(PIN_ADC);  // discard first conversion after switching input
   long sum = 0;
   for (int i = 0; i < 16; i++) sum += analogRead(PIN_ADC);
-  return sum / 16.0f / 1023.0f * ADC_VREF * DIVIDER;
+  float v = sum / 16.0f / 1023.0f * vcc * DIVIDER;
+  return v * CAL_GAIN + CAL_OFFSET;
 }
 
 float voltageToPressure(float v) { return pow(10.0f, 1.667f * v - 9.333f); }
