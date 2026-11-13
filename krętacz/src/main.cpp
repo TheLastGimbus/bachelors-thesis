@@ -33,7 +33,10 @@ const float PID_MAX_SPEED = 0.125f * STEPS_PER_REV;  // steps/s (0.125 rev/s), k
 const float MAX_OPEN_DEG = 0;  // 0 = no limit on the opening side
 
 // ---- PID (error is relative: (target - measured) / target; output scaled to steps/s) ----
-const float KP = 1.5f, KI = 0.25f, KD = 0;  // output = fraction of PID_MAX_SPEED
+// The valve is driven by speed, so P alone already integrates position; keep KI small/0 or it overshoots.
+// D acts on the measurement (brakes when approaching fast, no kick on new target).
+const float KP = 0.6f, KI = 0.0f, KD = 1.0f;  // output = fraction of PID_MAX_SPEED
+const float DEADBAND = 0.03f;                  // relative error below which the valve stays still
 const unsigned long PID_PERIOD_MS = 200;
 
 enum Mode { IDLE, MANUAL, TARGET_FLOW, TARGET_PRESSURE };
@@ -44,7 +47,7 @@ long position = 0;  // steps from closed (0)
 long pending = 0;  // steps left to do (signed, in "valve opening" direction)
 unsigned long stepIntervalUs = 1000000UL / MANUAL_SPEED;
 
-float integral = 0, lastError = 0;
+float integral = 0, lastMeasured = NAN;
 float stepRemainder = 0;
 unsigned long lastPid = 0;
 
@@ -74,7 +77,8 @@ void startMode(Mode m, float value) {
   if (value <= 0) return;
   mode = m;
   target = value;
-  integral = lastError = 0;
+  integral = 0;
+  lastMeasured = NAN;
   lastPid = millis();
   stepIntervalUs = 1000000UL / PID_MAX_SPEED;
 }
@@ -95,11 +99,15 @@ void updatePid() {
 
   float measured = (mode == TARGET_FLOW) ? readFlow() : readPressure();
   float error = (target - measured) / target;
-  integral = constrain(integral + error * dt, -1 / max(KI, 1e-6f), 1 / max(KI, 1e-6f));
-  float out = (KP * error + KI * integral + KD * (error - lastError) / dt) * PID_MAX_SPEED;
-  lastError = error;
+  float rel = measured / target;
+  if (isnan(lastMeasured)) lastMeasured = rel;
+  float rate = (rel - lastMeasured) / dt;
+  lastMeasured = rel;
 
-  out = constrain(out, -PID_MAX_SPEED, PID_MAX_SPEED);
+  float out = KP * error + KI * integral - KD * rate;
+  if (fabs(out) < 1) integral = constrain(integral + error * dt, -1 / max(KI, 1e-6f), 1 / max(KI, 1e-6f));
+  if (fabs(error) < DEADBAND && fabs(rate) < DEADBAND) out = 0;
+  out = constrain(out, -1.0f, 1.0f) * PID_MAX_SPEED;
   stepRemainder += out * dt;
   long whole = (long)stepRemainder;
   stepRemainder -= whole;
