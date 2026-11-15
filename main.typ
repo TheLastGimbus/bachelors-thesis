@@ -1,12 +1,14 @@
-  = Dobra no to co
+#import "utils.typ": *
 
-Teraz sprawdze jak to działa
+#title[Charakteryzacja silnika jonowego wykonanego technikami MEMS]
+Mateusz Soszyński
 
-chyba chujowo
-- okej
-ale co ja na to
+#pagebreak()
 
-a to troche szybciej? chyba tak
+= Spis treści
 
-fdssdf
+#outline()
 
+= Wstęp
+
+= Podsumowanie xd
