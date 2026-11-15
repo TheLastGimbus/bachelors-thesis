@@ -1,33 +1,5 @@
 // Szablon pracy dyplomowej – PWr, W12 WEFiM (wzór strony tytułowej: inz_pl_w12n.docx)
 
-#let title-page(title, author, supervisor, field, year) = page(
-  margin: 2.54cm,
-  footer: none,
-)[
-  #set text(size: 14pt)
-  #set par(first-line-indent: 0pt)
-
-  #align(center)[
-    #text(size: 16pt, weight: "bold")[Politechnika Wrocławska] \
-    #text(size: 16pt)[Wydział Elektroniki, Fotoniki i Mikrosystemów]
-  ]
-  #line(length: 100%)
-  Kierunek studiów: #field
-
-  #v(1fr)
-  #align(center, text(size: 32pt)[PRACA DYPLOMOWA \ INŻYNIERSKA])
-  #v(1.5fr)
-  #align(center, text(size: 16pt, title))
-  #v(1.5fr)
-  #align(center)[Autor: \ #author]
-  #v(1cm)
-  #align(center)[Opiekun: \ #supervisor]
-  #v(2fr)
-
-  #line(length: 100%)
-  #align(center, text(size: 16pt)[Wrocław #year])
-]
-
 #let thesis(body) = {
   // Official .docx template uses "EB Garamond", but i like liberation :)
   set text(font: ("Liberation Serif"), size: 12pt, lang: "pl")
@@ -61,3 +33,31 @@
 
   body
 }
+
+#let title-page(title, author, supervisor, field, year) = page(
+  margin: 2.54cm,
+  footer: none,
+)[
+  #set text(size: 14pt)
+  #set par(first-line-indent: 0pt)
+
+  #align(center)[
+    #text(size: 16pt, weight: "bold")[Politechnika Wrocławska] \
+    #text(size: 16pt)[Wydział Elektroniki, Fotoniki i Mikrosystemów]
+  ]
+  #line(length: 100%)
+  Kierunek studiów: #field
+
+  #v(1fr)
+  #align(center, text(size: 32pt)[PRACA DYPLOMOWA \ INŻYNIERSKA])
+  #v(1.5fr)
+  #align(center, text(size: 16pt, title))
+  #v(1.5fr)
+  #align(center)[Autor: \ #author]
+  #v(1cm)
+  #align(center)[Opiekun: \ #supervisor]
+  #v(2fr)
+
+  #line(length: 100%)
+  #align(center, text(size: 16pt)[Wrocław #year])
+]
