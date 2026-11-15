@@ -7,7 +7,7 @@
 #title-page(
   "Charakteryzacja silnika jonowego wykonanego technikami MEMS",
   "Mateusz Soszyński",
-  "dr inż. Imię Nazwisko",
+  "dr inż. Piotr Szyszka",
   "Inteligentna Elektronika",
   2026,
 )
