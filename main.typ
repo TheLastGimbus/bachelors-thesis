@@ -1,14 +1,41 @@
 #import "utils.typ": *
+#import "template.typ": thesis, title-page
 
-#title[Charakteryzacja silnika jonowego wykonanego technikami MEMS]
-Mateusz Soszyński
+#show: thesis
+#show: mathSettings
+
+#title-page(
+  "Charakteryzacja silnika jonowego wykonanego technikami MEMS",
+  "Mateusz Soszyński",
+  "dr inż. Imię Nazwisko",
+  "Inteligentna Elektronika",
+  2026,
+)
+
+#heading(numbering: none)[Streszczenie]
+Streszczenie pracy.
+
+*Słowa kluczowe:* silnik jonowy, MEMS
 
 #pagebreak()
 
-= Spis treści
+#heading(numbering: none)[Abstract]
+Abstract of the thesis.
 
-#outline()
+*Keywords:* ion thruster, MEMS
+
+#pagebreak()
+
+#outline(title: "Spis treści")
 
 = Wstęp
 
-= Podsumowanie xd
+= Cel pracy
+
+= Wprowadzenie teoretyczne
+
+= Prace własne
+
+= Podsumowanie
+
+#heading(numbering: none)[Literatura]
