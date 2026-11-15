@@ -1,3 +1,4 @@
 #!/bin/sh
-git diff --cached --name-only | grep -q '\.typ$' || exit 0
-typst compile main.typ main.pdf
+doc='Praca Inżynierska - Charakteryzacja silnika jonowego wykonanego technikami MEMS - Mateusz Soszyński'
+git diff --cached --name-only -z | tr '\0' '\n' | grep -q '\.typ$' || exit 0
+typst compile "$doc.typ" "$doc.pdf" && git add "$doc.pdf"
