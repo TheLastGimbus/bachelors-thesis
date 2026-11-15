@@ -1,0 +1,3 @@
+#!/bin/sh
+git diff --cached --name-only | grep -q '\.typ$' || exit 0
+typst compile main.typ main.pdf

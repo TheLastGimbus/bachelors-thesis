@@ -12,6 +12,8 @@
   2026,
 )
 
+TEST LOL
+
 #heading(numbering: none)[Streszczenie]
 Streszczenie pracy.
 
