@@ -20,7 +20,7 @@ const uint8_t PIN_ADC = A0;
 const int MOTOR_DIRECTION = 1;
 
 //const float STEPS_PER_REV = 200.0f * 8;  // 1.8deg motor, TMC2208 default 1/8 microstep (MS1=MS2=GND)
-const float STEPS_PER_REV = 200.0f * 16;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
+const float STEPS_PER_REV = 200.0f * 16;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=5V)
 //const float STEPS_PER_REV = 200.0f;  // Pololu-style A4988 or DRV8825 driver (MS1=MS2=GND)
 const float DIVIDER = 2.0f;              // 1:2 divider before ADC
 const float ADC_VREF = 5.0f;    // fallback if the Vcc measurement fails
@@ -41,6 +41,7 @@ const float MAX_OPEN_DEG = 0;  // 0 = no limit on the opening side
 // D acts on the measurement (brakes when approaching fast, no kick on new target).
 const float KP = 0.6f, KI = 0.0f, KD = 1.0f;  // output = fraction of PID_MAX_SPEED
 const float DEADBAND = 0.03f;                  // relative error below which the valve stays still
+const float PID_MIN_SPEED = 0.05f * STEPS_PER_REV;  // steps/s: PID speed below this = stand still
 const unsigned long PID_PERIOD_MS = 200;
 
 enum Mode { IDLE, MANUAL, TARGET_FLOW, TARGET_PRESSURE };
@@ -126,6 +127,9 @@ void updatePid() {
   if (fabs(out) < 1) integral = constrain(integral + error * dt, -1 / max(KI, 1e-6f), 1 / max(KI, 1e-6f));
   if (fabs(error) < DEADBAND && fabs(rate) < DEADBAND) out = 0;
   pidSpeed = constrain(out, -1.0f, 1.0f) * PID_MAX_SPEED;
+  // Either move at least PID_MIN_SPEED, or not at all - tiny outputs near the
+  // setpoint would otherwise micro-step creep and jiggle back and forth.
+  if (fabs(pidSpeed) < PID_MIN_SPEED) pidSpeed = 0;
 }
 
 void updateStepper() {
