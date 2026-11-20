@@ -33,6 +33,11 @@
     }
   }
 
+  // Em-dash 😏
+  show " - ": it => {
+    " – "
+  }
+
   // rozmiary nagłówków wg zaleceń; rozdziały od nowej strony
   show heading: set par(first-line-indent: 0pt)
   show heading.where(level: 1): set text(size: 25pt)
