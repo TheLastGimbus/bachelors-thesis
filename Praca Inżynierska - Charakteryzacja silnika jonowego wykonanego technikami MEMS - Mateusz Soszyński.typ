@@ -47,7 +47,7 @@ Abstract of the thesis.
 
 #figure(caption: [Jest mega dużo nano satów @nanosatsDatabase], image("images/Nanosats_years_2026-07-31.svg"))
 
-#figure(caption: [Przykładowa pseudo-satelita CanSat @cansatWiki na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg"))
+#figure(caption: [Przykładowa pseudo-satelita CanSat @cansatWiki na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg", width: 50%))
 
 == Przegląd literatury
 

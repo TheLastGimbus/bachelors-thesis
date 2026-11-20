@@ -20,6 +20,19 @@
   set math.equation(numbering: "(1)")
   show link: underline
 
+  // cytowanie @key: obok referencji w tekście dodaje przypis dolny z pełną bibliografią
+  //
+  //Dlaczego to jest potrzebne — dwie rzeczy:
+  // 1. Cytyj w tekście vs. w bibliografii. Twoje @key w rozdziałach to forma "normal" (renderuje się jako [1]). Ale tytuł bibliografii na końcu pracy też jest zbudowany z elementów cite — te mają formę "full" (pełny wpis, np. „1 IEEE, about CubeSat..."). Bez if każda pozycja w Bibliografii dostałaby też zbędny przypis ze sobą samym w treści.
+  // 2. Rekurencja. Sam dodaję w przypisie cite(it.key, form: "full") — to jest też cytowanie, więc reguła show cite łapie je ponownie. Gdyby nie było if, ten wewnętrzny cite znów dostałby przypis, w którym znów jest cite, i tak w nieskończoność — Typst by się zapętlił. Dzięki if forma "full" przechodzi przez else bez zmian, więc łańcuch się urywa.
+  show cite: it => {
+    if it.form == "normal" {
+      it + footnote(numbering: _ => [], cite(it.key, supplement: it.supplement, form: "full"))
+    } else {
+      it
+    }
+  }
+
   // rozmiary nagłówków wg zaleceń; rozdziały od nowej strony
   show heading: set par(first-line-indent: 0pt)
   show heading.where(level: 1): set text(size: 25pt)
