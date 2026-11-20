@@ -1,8 +1,6 @@
-#import "utils.typ": *
 #import "template.typ": thesis, title-page
 
 #show: thesis
-#show: mathSettings
 
 #title-page(
   "Charakteryzacja silnika jonowego wykonanego technikami MEMS",
@@ -43,6 +41,11 @@ Abstract of the thesis.
 // - Bo new space ma małe payloady -> DODAJ rozmiary payloadów
 //
 
+Branża kosmiczna przez ostatnie lata bardzo dojrzała, i stała się dynamicznym, bogatym w innowacje rynkiem. Przestała ona należeć do kilku największych organizacji rządowych świata, a wręcz rozmyła się na wiele nowych firm i start-up'ów, które szybko wprowadzają zmiany w tym, co leci na orbitę naszej planety.
+
+Jednym z najważniejszych aspektów tych innowacji jest miniaturyzacja - wznoszenie ładunku w kosmos jest jednym z największych kosztów, dlatego każdy gram i centymetr sześcienny mniej to zaoszczędzone tysiące dolarów.
+
+Pomógł tu fakt, że dotyczy ona niemal wszystkich technologii których używamy - przykładowo, dzięki branży mobilnej, która naciskała na energooszczędność procesorów w telefonach, z tych samych wydajniejszych i mniejszych procesorów mogą korzystać firmy kosmiczne.
 
 
 #figure(caption: [Jest mega dużo nano satów @nanosatsDatabase], image("images/Nanosats_years_2026-07-31.svg"))

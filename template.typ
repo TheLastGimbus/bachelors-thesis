@@ -38,6 +38,38 @@
     " – "
   }
 
+  // ==== callout: linia zaczynająca się od "> " ====
+  let callout-color = rgb(0, 0, 0, 32)
+
+  // tekst węzła contentu: zwykły tekst daje swój tekst, element `space` daje spację,
+  // cokolwiek innego (box itp.) — nic
+  let node-text(node) = if node.has("text") { node.text } else if repr(node.func()) == "space" { " " } else { "" }
+
+  // czy akapit zaczyna się od "> "? Zwykły tekst to jeden node "text"; z markupem
+  // w środku body jest sekwencją, a "> " siedzi w pierwszym tekście — ewentualnie
+  // rozpadszy się na ">" + element `space`, gdy zaraz za spacją jest markup (np. obrazek).
+  // Guard "node-text(first) != ''" odcina paragrafy zaczynające się od elementu (boxa itp.)
+  let is-callout(body) = {
+    let nodes = if body.has("children") { body.children.slice(0, 2) } else { (body,) }
+    nodes.len() > 0 and node-text(nodes.first()) != "" and nodes.map(node-text).join().starts-with("> ")
+  }
+
+  // callout: linia zaczynająca się od "> " — reszta linii może zawierać dowolny markup
+  // (pogrubienia, math itp.). "> " wycina reguła regex wewnątrz bloku, więc nie
+  // łapie "> " w środku zwykłych akapitów ani w blokach kodu.
+  // Uwaga: goły #image(...) jest blokowy i wypada z callouta — inline'uj przez box.
+  show par: it => {
+    if is-callout(it.body) {
+      block(radius: 5pt, width: 100%, inset: 6pt, fill: callout-color)[
+        #show regex("^> "): it => []
+        #show regex("^>$"): it => []
+        #it
+      ]
+    } else {
+      it
+    }
+  }
+
   // rozmiary nagłówków wg zaleceń; rozdziały od nowej strony
   show heading: set par(first-line-indent: 0pt)
   show heading.where(level: 1): set text(size: 25pt)
@@ -48,6 +80,13 @@
   // tabele: podpis nad tabelą
   show figure.where(kind: table): set figure(supplement: "Tab.")
   show figure.where(kind: table): set figure.caption(position: top)
+
+  // poprawna polska matma
+  show math.ast: it => math.dot
+  show math.equation: it => {
+    show regex("\d+\.\d+"): num => num.text.replace(".", ",")
+    it
+  }
 
   body
 }
