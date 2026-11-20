@@ -14,7 +14,7 @@
     ),
   )
 
-  set par(justify: true, first-line-indent: 1.2em, spacing: 0.8em)
+  set par(justify: true, first-line-indent: (amount: 1.2em, all: true), spacing: 0.8em)
   set heading(numbering: "1.")
   set figure(supplement: "Rys.")
   set math.equation(numbering: "(1)")
