@@ -15,7 +15,7 @@
   )
 
   set par(justify: true, first-line-indent: 1.2em, spacing: 0.8em)
-  set heading(numbering: "1.1")
+  set heading(numbering: "1.")
   set figure(supplement: "Rys.")
   set math.equation(numbering: "(1)")
   show link: underline

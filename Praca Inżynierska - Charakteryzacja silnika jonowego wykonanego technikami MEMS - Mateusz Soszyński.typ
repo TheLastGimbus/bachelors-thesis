@@ -12,7 +12,7 @@
   2026,
 )
 
-#heading(numbering: none)[Streszczenie]
+#heading(numbering: none)[Wprowadzenie]
 Streszczenie pracy.
 
 *Słowa kluczowe:* silnik jonowy, MEMS
@@ -28,14 +28,69 @@ Abstract of the thesis.
 
 #outline(title: "Spis treści")
 
+
+
 = Wstęp
 
-= Cel pracy
+== Teoria
 
-= Wprowadzenie teoretyczne
+// O czym chce napisać:
+// Chce generalnie, żeby ta teoria pokazała, że ten silnik jest potrzebny
+// Czemu jest potrzebny?
+// - Bo dotychczasowe silniki są duże
+// Czemu duże silniki są złe?
+// - Bo wszystko co duże w kosmosie jest złe -> DODAJ koszty wynoszenia w kosmos
+// - Bo new space ma małe payloady -> DODAJ rozmiary payloadów
+//
 
-= Prace własne
 
-= Podsumowanie
 
-#heading(numbering: none)[Literatura]
+#figure(caption: [Jest mega dużo nano satów @nanosatsDatabase], image("images/Nanosats_years_2026-07-31.svg"))
+
+#figure(caption: [Przykładowa pseudo-satelita CanSat @cansatWiki na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg"))
+
+== Przegląd literatury
+
+// ABIE-X: On-orbit proof-of-concept experiment of air-breathing ion engine
+// Ziomki twierdzą że "Very low Earth orbit" jeszcze nie śmiga bo jest opór powietrza, a oni zrobią silnik co będzie na tym działał
+// https://www.sciencedirect.com/science/article/pii/S0094576526003620
+
+// Electric propulsion for satellites and spacecraft: established technologies and novel approaches
+//
+// https://vpn.student.pwr.edu.pl/https//iopscience.iop.org/article/10.1088/0963-0252/25/3/033002/meta
+
+// Electric propulsion for small satellites
+//
+// https://vpn.student.pwr.edu.pl/https//iopscience.iop.org/article/10.1088/0741-3335/57/1/014005
+
+// Electric propulsion: comparisons between different concepts
+//
+// https://vpn.student.pwr.edu.pl/https///iopscience.iop.org/article/10.1088/0741-3335/53/12/124011
+
+// Plasma propulsion for telecommunication satellites
+//
+// https://iopscience.iop.org/article/10.1088/1742-6596/1326/1/012001
+
+= Zagadnienie
+
+
+
+= Charakteryzacja
+
+== Stanowisko pomiarowe
+
+=== Obudowa silnika
+
+=== Urządzenia do pomiarów elektrycznych i ich automatyzacja
+
+=== Automatyczna kontrola zaworu
+
+== Pomiary
+
+== Wnioski z pomiarów
+
+
+
+= Wnioski ogólne i podsumowanie
+
+#bibliography("bibliography.bib", style: "ieee", title: "Bibliografia", full: true)
