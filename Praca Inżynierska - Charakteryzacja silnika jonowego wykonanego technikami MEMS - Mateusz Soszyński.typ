@@ -41,16 +41,25 @@ Abstract of the thesis.
 // - Bo new space ma małe payloady -> DODAJ rozmiary payloadów
 //
 
-Branża kosmiczna przez ostatnie lata bardzo dojrzała, i stała się dynamicznym, bogatym w innowacje rynkiem. Przestała ona należeć do kilku największych organizacji rządowych świata, a wręcz rozmyła się na wiele nowych firm i start-up'ów, które szybko wprowadzają zmiany w tym, co leci na orbitę naszej planety.
+=== Miniaturyzacja satelit
 
-Jednym z najważniejszych aspektów tych innowacji jest miniaturyzacja - wznoszenie ładunku w kosmos jest jednym z największych kosztów, dlatego każdy gram i centymetr sześcienny mniej to zaoszczędzone tysiące dolarów.
+Branża kosmiczna przez ostatnie lata bardzo dojrzała, i stała się dynamicznym, bogatym w innowacje rynkiem. Przestała ona należeć do kilku największych organizacji rządowych świata, a rozmyła się na wiele nowych firm i start-up'ów, które szybko wprowadzają zmiany w tym, co leci na orbitę naszej planety. Powszechnie używa się terminu "New Space" na ten trend @newSpaceWiki.
 
-Pomógł tu fakt, że dotyczy ona niemal wszystkich technologii których używamy - przykładowo, dzięki branży mobilnej, która naciskała na energooszczędność procesorów w telefonach, z tych samych wydajniejszych i mniejszych procesorów mogą korzystać firmy kosmiczne.
+Jednym z najważniejszych aspektów tych innowacji jest miniaturyzacja - wznoszenie ładunku w kosmos to ogromne koszta, a każdy kilogram mniej to zaoszczędzone tysiące dolarów.
+Pomógł tu fakt, że miniaturyzacja dotyczy niemal wszystkich technologii których używamy - przykładowo, dzięki branży mobilnej, która naciskała na energooszczędność procesorów w telefonach, z tych samych wydajniejszych i mniejszych procesorów mogą korzystać firmy kosmiczne.
 
+#figure(caption: [Mimo gwałtownego spadku kosztów w ciągu ostatniej dekady, wzniesienie kilograma ładunku na niską orbite wciąż wynosi \~2000\$ @owid-space-exploration-satellites], image("images/cost-space-launches-low-earth-orbit.svg")
+)
 
-#figure(caption: [Jest mega dużo nano satów @nanosatsDatabase], image("images/Nanosats_years_2026-07-31.svg"))
+//> Czy takie "wnioski w podpisie zdj" to git pomysł? Czy powinienem tu też dopisać sam opis zdjecia (że "grafika z world in data") ?
 
-#figure(caption: [Przykładowa pseudo-satelita CanSat @cansatWiki na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg", width: 50%))
+Postępy w miniaturyzacji otworzyły droge tzw. "Nano Satelitom", czyli satelit do 10~kg. W ostatnich 10 latach wzniesiono na orbite już tysiące takich satelit, a w 2026 roku spodziewa się wzniesienia ponad 600 @nanosatsDatabase.
+
+#figure(caption: [Ilość wzniesionych "Nano Satelit" w ostatnich latach @nanosatsDatabase.], image("images/Nanosats_years_2026-07-31.svg", width: 90%))
+
+Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu "CanSat'ów", czyli pseudo-satelit wielkości puszki po napojach @cansatWiki. Zawodnicy w wieku około licealnym sami projektują i budują swoje satelity, które będą w stanie wykonać określoną przez nich misje (np. zebrać obrazy terenu), utrzymać komunikacje oraz bezpiecznie wylądować. Satelity zespołów, którym uda dostać się do ostatniego etapu, są wystrzeliwane małą rakietą lub zrzucane z samolotu z wysokości \~200m. Realia tych zawodów są wcale nie tak odległe od tego, co staje się możliwe w dzisiejszej branży kosmicznej.
+
+#figure(caption: [Przykładowa pseudo-satelita CanSat na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg", width: 50%))
 
 == Przegląd literatury
 
