@@ -27,7 +27,18 @@
   // 2. Rekurencja. Sam dodaję w przypisie cite(it.key, form: "full") — to jest też cytowanie, więc reguła show cite łapie je ponownie. Gdyby nie było if, ten wewnętrzny cite znów dostałby przypis, w którym znów jest cite, i tak w nieskończoność — Typst by się zapętlił. Dzięki if forma "full" przechodzi przez else bez zmian, więc łańcuch się urywa.
   show cite: it => {
     if it.form == "normal" {
-      it + footnote(numbering: _ => [], cite(it.key, supplement: it.supplement, form: "full"))
+      context {
+        // przypis tylko przy PIERWSZYM cytowaniu danego źródła; przy kolejnych
+        // odwołaniach samej referencji [n] bez powtarzania przypisu.
+        // Uwaga: query(...).before(it.location()) zawiera też cytowanie bieżące,
+        // więc pierwsze wystąpienie daje prev.len() == 1.
+        let prev = query(cite.where(key: it.key, form: "normal").before(it.location()))
+        if prev.len() <= 1 {
+          it + footnote(numbering: _ => [], cite(it.key, supplement: it.supplement, form: "full"))
+        } else {
+          it
+        }
+      }
     } else {
       it
     }
