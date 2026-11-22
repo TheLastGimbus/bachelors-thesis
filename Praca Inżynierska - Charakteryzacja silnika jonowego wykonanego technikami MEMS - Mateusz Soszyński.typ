@@ -57,7 +57,7 @@ Postępy w miniaturyzacji otworzyły droge tzw. "Nano Satelitom", czyli satelit 
 
 #figure(caption: [Ilość wzniesionych "Nano Satelit" w ostatnich latach @nanosatsDatabase.], image("images/Nanosats_years_2026-07-31.svg", width: 90%))
 
-Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu "CanSat'ów", czyli pseudo-satelit wielkości puszki po napojach @cansatWiki. Zawodnicy w wieku około licealnym sami projektują i budują swoje satelity, które będą w stanie wykonać określoną przez nich misje (np. zebrać obrazy terenu), utrzymać komunikacje oraz bezpiecznie wylądować. Satelity zespołów, którym uda dostać się do ostatniego etapu, są wystrzeliwane małą rakietą lub zrzucane z samolotu z wysokości \~200m. Realia tych zawodów są wcale nie tak odległe od tego, co staje się możliwe w dzisiejszej branży kosmicznej.
+Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu "CanSat'ów", czyli pseudo-satelit wielkości puszki po napojach @cansatWiki. Zawodnicy w wieku około licealnym sami projektują i budują swoje satelity, które będą w stanie wykonać określoną przez nich misje (np. zebrać obrazy terenu), utrzymać komunikacje oraz bezpiecznie wylądować. Satelity zespołów, którym uda dostać się do ostatniego etapu, są zrzucane z wysokości \~200m. Realia tych zawodów są wcale nie tak odległe od tego, co staje się możliwe w dzisiejszej branży kosmicznej.
 
 #figure(caption: [Przykładowa pseudo-satelita CanSat na zawodach Europejskiej Agencji Kosmicznej @cansatPhotos], image("images/Day-2-Can-Sat-2026-H68A5262--scaled.jpg", width: 50%))
 
