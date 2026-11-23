@@ -43,7 +43,7 @@ bool closedLimitEnabled = false;
 // ---- PID (error is relative: (target - measured) / target; output scaled to steps/s) ----
 // The valve is driven by speed, so P alone already integrates position; keep KI small/0 or it overshoots.
 // D acts on the measurement (brakes when approaching fast, no kick on new target).
-const float KP = 0.6f, KI = 0.0f, KD = 1.0f;  // output = fraction of PID_MAX_SPEED
+const float KP = 0.6f, KI = 0.02f, KD = 1.0f;  // output = fraction of PID_MAX_SPEED
 const float DEADBAND = 0.03f;                  // relative error below which the valve stays still
 const float PID_MIN_SPEED = 0.05f * STEPS_PER_REV;  // steps/s: PID speed below this = stand still
 const unsigned long PID_PERIOD_MS = 200;
