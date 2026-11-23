@@ -5,6 +5,7 @@
 //   P <Pa>     hold pressure at target (PID)
 //   M <deg>    rotate by angle (negative = other way) and stay; 0 = stop everything
 //   Z          declare current position as 0 (= valve fully closed)
+//   ZE / ZD    enable / disable the closed-end limit; disabled at boot
 //   RF / RP / RV   read inflow [mg/s] / pressure [Pa] / raw voltage [V]
 //   RA         read position [deg] from 0
 #include <Arduino.h>
@@ -35,6 +36,9 @@ const float PID_MAX_SPEED = 0.125f * STEPS_PER_REV;  // steps/s (0.125 rev/s), k
 
 // ---- software limits: position 0 (boot / Z command) = fully closed ----
 const float MAX_OPEN_DEG = 0;  // 0 = no limit on the opening side
+// Off by default: without a limit switch the boot position may not be the closed
+// end, so enforcement is opt-in once the valve has been zeroed by hand (Z).
+bool closedLimitEnabled = false;
 
 // ---- PID (error is relative: (target - measured) / target; output scaled to steps/s) ----
 // The valve is driven by speed, so P alone already integrates position; keep KI small/0 or it overshoots.
@@ -148,7 +152,7 @@ void updateStepper() {
   lastStep = micros();
 
   bool forward = pid ? pidSpeed > 0 : pending > 0;
-  bool atClosed = !forward && position <= 0;
+  bool atClosed = closedLimitEnabled && !forward && position <= 0;
   bool atOpen = forward && MAX_OPEN_DEG > 0 && position >= MAX_OPEN_DEG / 360.0f * STEPS_PER_REV;
   if (atClosed || atOpen) {
     pending = 0;
@@ -176,12 +180,14 @@ void handleCommand(String line) {
   else if (line == "RV") Serial.println(readVoltage(), 4);
   else if (line == "RA") Serial.println(position / STEPS_PER_REV * 360.0f, 1);
   else if (line == "Z") { stop(); position = 0; }
+  else if (line == "ZE") closedLimitEnabled = true;
+  else if (line == "ZD") closedLimitEnabled = false;
   else if (line[0] == 'F') startMode(TARGET_FLOW, value);
   else if (line[0] == 'P') startMode(TARGET_PRESSURE, value);
   else if (line[0] == 'M') startManual(value);
   else { Serial.println("?"); return; }
 
-  if (line == "Z" || line[0] == 'F' || line[0] == 'P' || line[0] == 'M') Serial.println("OK");
+  if (line == "Z" || line == "ZE" || line == "ZD" || line[0] == 'F' || line[0] == 'P' || line[0] == 'M') Serial.println("OK");
 }
 
 void setup() {

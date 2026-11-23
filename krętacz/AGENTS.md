@@ -17,14 +17,14 @@ Documented in `../sccm to f(U_prozniomiez)/filter/README.md` (Polish).
 - Inflow in mg/s is a cubic polynomial in **pressure** (not voltage; README's last section is sloppy about this), valid for roughly 0.002-0.07 mg/s. Works because the pump removes a constant amount at steady state.
 
 ## Serial protocol (115200, newline-terminated)
-`F <mg/s>` flow PID, `P <Pa>` pressure PID, `M <deg>` rotate by angle (0 = stop everything), `Z` set current position as 0, `RF`/`RP`/`RV` read flow/pressure/voltage, `RA` read angle from 0. Replies `OK` for commands, `?` for unknown ones, `LIMIT closed|open` when a limit stops motion.
+`F <mg/s>` flow PID, `P <Pa>` pressure PID, `M <deg>` rotate by angle (0 = stop everything), `Z` set current position as 0, `ZE`/`ZD` enable/disable the closed-end (position 0) limit (disabled at boot), `RF`/`RP`/`RV` read flow/pressure/voltage, `RA` read angle from 0. Replies `OK` for commands, `?` for unknown ones, `LIMIT closed|open` when a limit stops motion.
 
 ## Design notes
 - `MOTOR_DIRECTION` (+1/-1) flips motor direction. Positive must mean "opening" (PID relies on it).
 - PID output is valve **speed**, so the valve acts as an integrator. Default `KI = 0`; KD works on the measurement. Gains are fractions of `PID_MAX_SPEED`. The valve-to-pressure response has lots of lag, so keep it slow.
 - PID only sets `pidSpeed` (steps/s) every 200 ms; `updateStepper` steps continuously at that rate (evenly spaced). Do not turn PID output into a burst of pending steps - that made the valve hop. Coils stay powered while in PID mode.
 - Speeds are defined in revolutions per second times `STEPS_PER_REV`, so they scale with microstepping.
-- Software limit: position 0 = valve closed at boot (or after `Z`). All steps pass through `updateStepper`, which enforces it for manual and PID modes. Optional `MAX_OPEN_DEG`. Position is dead-reckoned, so lost steps or hand-turning cause drift. No limit switch yet (a microswitch at the closed end was suggested).
+- Software limit: position 0 = valve closed at boot (or after `Z`), but the closed-end limit is **off by default** and only enforced after `ZE` (`ZD` turns it back off). All steps pass through `updateStepper`, which enforces it for manual and PID modes. Optional `MAX_OPEN_DEG`. Position is dead-reckoned, so lost steps or hand-turning cause drift. No limit switch yet (a microswitch at the closed end was suggested).
 - Coils are disabled when idle.
 
 ## Workflow
