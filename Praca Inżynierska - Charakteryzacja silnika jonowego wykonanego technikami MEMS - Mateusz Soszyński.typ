@@ -300,7 +300,7 @@ Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu
   rys("images/kretacz/trzymak-dol.png", "dol"), rys("images/kretacz/all.png", "all"),
 )
 
-#rys("krętacz/em_vs_arduino.png", "Napięcie na mierniku EuroMeasure w funkcji napięcia odczytanego przez Arduino")
+#rys("kretacz/em_vs_arduino.png", "Napięcie na mierniku EuroMeasure w funkcji napięcia odczytanego przez Arduino")
 
 == Pomiary
 

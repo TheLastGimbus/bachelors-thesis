@@ -10,7 +10,7 @@ Thesis is written in Polish, in Typst.
 - `Praca Inżynierska - ... .typ`: main document (uses `template.typ`, `utils.typ`). The `.pdf` next to it is generated.
 - `pomiary/`: measurement CSVs from experiments.
 - `sccm to f(U_prozniomiez)/filter/`: Python scripts and fits for gauge voltage -> pressure/inflow (see its README).
-- `krętacz/`: PlatformIO firmware for the stepper-driven needle valve (has its own `AGENTS.md`).
+- `kretacz/`: PlatformIO firmware for the stepper-driven needle valve (has its own `AGENTS.md`).
 - `arduino-voltometer/`: PlatformIO Arduino voltmeter.
 
 ## Workflow
