@@ -20,7 +20,7 @@
   set math.equation(numbering: "(1)")
   show link: underline
   
-  set grid(gutter: 14pt)
+  set grid(gutter: 16pt)
 
   // cytowanie @key: obok referencji w tekście dodaje przypis dolny "Autor: Tytuł"
   //

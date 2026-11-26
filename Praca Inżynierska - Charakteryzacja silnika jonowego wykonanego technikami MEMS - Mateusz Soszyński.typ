@@ -244,8 +244,11 @@ Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu
 
 == Stanowisko pomiarowe
 
+#rys("images/stanowisko.jpg", "Całe stanowisko pomiarowe")
+
 === Obudowa silnika
 
+#rys("images/3d-enc/pic-pcb.jpg", "Złącze komory próżniowej, pod które projektowana była obudowa", width: 60%)
 
 #figure(caption: "Płytka PCB", grid(
   columns: 2,
@@ -274,9 +277,26 @@ Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu
 
 #rys("images/3d-enc/all-angle.png", "Finał"),
 
+#grid(
+  columns: 2,
+  rys("images/3d-enc/pic-all.jpg", "tak"), rys("images/3d-enc/pic-all-zoom.jpg", "tak"),
+)
+
+#grid(
+  columns: 2,
+  rys("images/3d-enc/pic-goldpin_hs-2.jpg", "tak"), rys("images/3d-enc/pic-goldpin_hs-3.jpg", "tak"),
+)
+
+
 === Urządzenia do pomiarów elektrycznych i ich automatyzacja
 
 === Automatyczna kontrola zaworu
+
+#grid(
+  columns: 2,
+  rys("images/kretacz/krecidlo.png", "krecidlo"), rys("images/kretacz/nad-krecidlo.png", "krecidlo"),
+  rys("images/kretacz/trzymak-dol.png", "dol"), rys("images/kretacz/all.png", "all"),
+)
 
 == Pomiary
 
