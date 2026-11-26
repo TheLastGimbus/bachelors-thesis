@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Styl cytowania dla przypisów dolnych w template.typ: sam "Autor: Tytuł".
+  Layout `bibliography` jest celowo identyczny z layoutem `citation`, bo przypis
+  dodawany jest przez cite(form: "full") — forma "full" łapie layout bibliografii,
+  a jednocześnie (jako jedyna) nie odpala ponownie show-rule na cite w template.typ.
+-->
+<style xmlns="http://purl.org/net/xbiblio/csl" version="1.0" class="in-text" default-locale="en-US">
+  <info>
+    <title>Author: Title (footnote)</title>
+    <id>urn:typst:author-title-colon</id>
+    <author>
+      <name>Mateusz Soszyński</name>
+    </author>
+    <updated>2026-11-22T00:00:00+00:00</updated>
+  </info>
+
+  <citation>
+    <layout suffix=".">
+      <text variable="citation-number" prefix="[" suffix="] "/>
+      <names variable="author editor" suffix=": ">
+        <name form="long" delimiter=", " delimiter-precedes-last="never" and="text" et-al-min="6" et-al-use-first="1"/>
+      </names>
+      <text variable="title"/>
+    </layout>
+  </citation>
+
+  <bibliography>
+    <layout suffix=".">
+      <text variable="citation-number" prefix="[" suffix="] "/>
+      <names variable="author editor" suffix=": ">
+        <name form="long" delimiter=", " delimiter-precedes-last="never" and="text" et-al-min="6" et-al-use-first="1"/>
+      </names>
+      <text variable="title"/>
+    </layout>
+  </bibliography>
+</style>
