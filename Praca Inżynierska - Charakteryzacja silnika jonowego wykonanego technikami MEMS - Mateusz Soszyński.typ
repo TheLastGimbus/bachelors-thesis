@@ -290,6 +290,8 @@ Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu
 
 === Urządzenia do pomiarów elektrycznych i ich automatyzacja
 
+#rys("sccm equals f(U_prozniomiez)/fit-log-log.png", "Funkcja strumienia masy w zależności od ciśnienia w komorze")
+
 === Automatyczna kontrola zaworu
 
 #grid(
@@ -297,6 +299,8 @@ Europejska Agencja Kosmiczna organizuje nawet zawody dla młodzieży w budowaniu
   rys("images/kretacz/krecidlo.png", "krecidlo"), rys("images/kretacz/nad-krecidlo.png", "krecidlo"),
   rys("images/kretacz/trzymak-dol.png", "dol"), rys("images/kretacz/all.png", "all"),
 )
+
+#rys("krętacz/em_vs_arduino.png", "Napięcie na mierniku EuroMeasure w funkcji napięcia odczytanego przez Arduino")
 
 == Pomiary
 
