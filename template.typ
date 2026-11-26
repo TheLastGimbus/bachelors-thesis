@@ -20,29 +20,32 @@
   set math.equation(numbering: "(1)")
   show link: underline
 
-  // cytowanie @key: obok referencji w tekście dodaje przypis dolny z pełną bibliografią
+  // cytowanie @key: obok referencji w tekście dodaje przypis dolny "Autor: Tytuł"
   //
   //Dlaczego to jest potrzebne — dwie rzeczy:
   // 1. Cytyj w tekście vs. w bibliografii. Twoje @key w rozdziałach to forma "normal" (renderuje się jako [1]). Ale tytuł bibliografii na końcu pracy też jest zbudowany z elementów cite — te mają formę "full" (pełny wpis, np. „1 IEEE, about CubeSat..."). Bez if każda pozycja w Bibliografii dostałaby też zbędny przypis ze sobą samym w treści.
   // 2. Rekurencja. Sam dodaję w przypisie cite(it.key, form: "full") — to jest też cytowanie, więc reguła show cite łapie je ponownie. Gdyby nie było if, ten wewnętrzny cite znów dostałby przypis, w którym znów jest cite, i tak w nieskończoność — Typst by się zapętlił. Dzięki if forma "full" przechodzi przez else bez zmian, więc łańcuch się urywa.
-  show cite: it => {
-    if it.form == "normal" {
-      context {
-        // przypis tylko przy PIERWSZYM cytowaniu danego źródła; przy kolejnych
-        // odwołaniach samej referencji [n] bez powtarzania przypisu.
-        // Uwaga: query(...).before(it.location()) zawiera też cytowanie bieżące,
-        // więc pierwsze wystąpienie daje prev.len() == 1.
-        let prev = query(cite.where(key: it.key, form: "normal").before(it.location()))
-        if prev.len() <= 1 {
-          it + footnote(numbering: _ => [], cite(it.key, supplement: it.supplement, form: "full"))
-        } else {
-          it
-        }
-      }
-    } else {
-      it
-    }
-  }
+//  show cite: it => {
+//    if it.form == "normal" {
+//      context {
+//        // przypis tylko przy PIERWSZYM cytowaniu danego źródła; przy kolejnych
+//        // odwołaniach samej referencji [n] bez powtarzania przypisu.
+//        // Uwaga: query(...).before(it.location()) zawiera też cytowanie bieżące,
+//        // więc pierwsze wystąpienie daje prev.len() == 1.
+//        let prev = query(cite.where(key: it.key, form: "normal").before(it.location()))
+//        if prev.len() <= 1 {
+//          // forma "full" z dedykowanym stylem CSL: przypis to sam "Autor: Tytuł"
+//          // (styl ma identyczne layouty citation i bibliography, więc pełny wpis
+//          // wygląda jak cytowanie). Lista autorów ≥ 6 skraca się do "X et al.".
+//          it + footnote(numbering: _ => [], cite(it.key, supplement: it.supplement, form: "full", style: "footnote-author-title.csl"))
+//        } else {
+//          it
+//        }
+//      }
+//    } else {
+//      it
+//    }
+//  }
 
   // Em-dash 😏
   show " - ": it => {
