@@ -19,6 +19,8 @@
   set figure(supplement: "Rys.")
   set math.equation(numbering: "(1)")
   show link: underline
+  
+  set grid(gutter: 14pt)
 
   // cytowanie @key: obok referencji w tekście dodaje przypis dolny "Autor: Tytuł"
   //
@@ -132,3 +134,5 @@
   #line(length: 100%)
   #align(center, text(size: 16pt)[Wrocław #year])
 ]
+
+#let rys(path, cap, ..imgArgs) = figure(image(path, ..imgArgs), caption: cap)
